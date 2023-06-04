@@ -7,8 +7,10 @@ const twilio = require('twilio');
 const { v4: uuidv4 } = require('uuid');
 const User = require('../../../models/user');
 
+require("dotenv").config();
+
 // Create Twilio Client
-const client = twilio("AC78954a631c9904b351ad9ae0343bb8ce","299e4235b553a8f6b54beb991f6f8d70");
+const client = twilio(process.env.TWILIO_SID,process.env.TWILIO_ACCESS_KEY);
 
 // Create an empty object to store the OTPs
 const otps = {};
