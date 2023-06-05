@@ -7,8 +7,10 @@ const twilio = require('twilio');
 const { v4: uuidv4 } = require('uuid');
 const User = require('../../../models/user');
 
+require("dotenv").config();
+
 // Create Twilio Client
-const client = twilio("AC78954a631c9904b351ad9ae0343bb8ce","299e4235b553a8f6b54beb991f6f8d70");
+const client = twilio(process.env.TWILIO_SID,process.env.TWILIO_ACCESS_TOKEN);
 
 // Create an empty object to store the OTPs
 const otps = {};
@@ -19,27 +21,29 @@ const generateOtp = () => {
 }
 
 // Update Password
-router.post('/update-password/send-otp',authMiddleWare, async (req, res) => {
+router.post('/update-password/send-otp', async (req, res) => {
+    // Get Hold Of Email
+    const { email } = req.body;
     try{
-         // Get Users phone number from database
-         const userId = req.user.userId;
+        // Search for the user with the provided email
+        const user = await User.findOne({
+            where: { email: email }
+        })
 
         // Generate an otp
         const otp = generateOtp();
 
         // Save otp with userId key
-        otps[userId] = otp;
+        otps[user.id] = otp;
 
-        // Find user with this user id
-        const user = await User.findByPk(userId);
 
         if(!user){
             return res.status(404)
                 .json({message:"User not found"})
         }
 
-
-        const phoneNumber = user.phone;
+        // Append country code with the phone number
+        const phoneNumber = "+91"+user.phone;
         if(!phoneNumber){
             return res.status(403)
                 .json({message:"No phone number added to the user account."})
