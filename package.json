@@ -17,7 +17,9 @@
     "google-auth-library": "^8.8.0",
     "jsonwebtoken": "^9.0.0",
     "mysql2": "^3.3.2",
+    "nodemailer": "^6.9.3",
     "nodemon": "^2.0.22",
+    "sendmail": "^1.6.1",
     "sequelize": "^6.31.1",
     "twilio": "^4.11.1"
   }
